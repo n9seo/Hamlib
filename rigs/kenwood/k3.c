@@ -2165,6 +2165,12 @@ int kx3_set_level(RIG *rig, vfo_t vfo, setting_t level, value_t val)
         // manual says 0-255 as of Rev G5 but experiment says 0-80
         snprintf(cmdbuf, sizeof(cmdbuf), "MG%03d", (int)(val.f * 80.0f));
         return kenwood_transaction(rig, cmdbuf, NULL, 0);
+
+    case RIG_LEVEL_RFPOWER:
+        // kx3 range .0 - .15 = 0 - 15w w/ kxpa .0 - 1  = 0 - 110w - needs better range for 110W KXPA100.
+//        snprintf(cmdbuf, sizeof(cmdbuf), "PC%03d", (int)(val.f * 110.0f));
+        snprintf(cmdbuf, sizeof(cmdbuf), "PC%03d", (int)(val.f * 1000.0f));
+        return kenwood_transaction(rig, cmdbuf, NULL, 0);
     }
 
     return k3_set_level(rig, vfo, level, val);
